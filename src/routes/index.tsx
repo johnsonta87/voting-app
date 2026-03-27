@@ -124,6 +124,8 @@ function Home() {
       : null
 
   const iAmInList = roomData?.votes.some((v) => v.voterName === voterName) ?? false
+  const disableResetRoom =
+    votedCount === 0 && (roomData?.ticketName.trim().length ?? 0) === 0
 
   const statusText = (() => {
     if (!roomData) return '…'
@@ -248,7 +250,7 @@ function Home() {
                 <p className="text-xs font-medium uppercase tracking-wider mb-1">
                   Currently voting on (optional):
                 </p>
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold ">
                   {roomData?.ticketName || (
                       <span className="text-gray-400 dark:text-gray-500 font-normal italic">
                       No ticket — click to set one
@@ -404,14 +406,16 @@ function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
                 onClick={() => setShowClearVotesConfirm(true)}
-                className="w-full border-2 border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 font-medium py-2.5 rounded-xl transition-colors text-sm"
+                disabled={votedCount === 0}
+                className="w-full border-2 border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
               >
                 🧹 Clear Votes
               </button>
 
               <button
                 onClick={() => setShowClearConfirm(true)}
-                className="w-full border-2 border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium py-2.5 rounded-xl transition-colors text-sm"
+                disabled={disableResetRoom}
+                className="w-full border-2 border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
               >
                 🗑 Reset Room
               </button>
