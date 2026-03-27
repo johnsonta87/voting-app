@@ -138,7 +138,7 @@ function Home() {
   if (!isClient) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 to-blue-50 dark:from-gray-900 dark:to-gray-800">
-        <p className="text-gray-400 animate-pulse">Loading…</p>
+        <p className="animate-pulse">Loading…</p>
       </div>
     )
   }
@@ -147,12 +147,12 @@ function Home() {
 
   if (!voterName) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-4">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-sm">
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm">
           <div className="text-center mb-6">
             <div className="text-5xl mb-3">🃏</div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">OCC Planning Poker</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+            <p className="text-white text-sm mt-1">
               Enter your name to join the session
             </p>
           </div>
@@ -163,7 +163,7 @@ function Home() {
               onChange={(e) => setNameInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
               placeholder="Your name"
-              className="border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
+              className="border-2 text-center border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
               autoFocus
             />
             <button
@@ -182,15 +182,15 @@ function Home() {
   // ── Main voting room ──────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gray-800">
       {/* ── Header ── */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-sm">
+      <header className="bg-white dark:bg-[#00203e] border-b border-gray-100 dark:border-gray-700 shadow-sm">
         <div className="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
           <span className="font-bold text-gray-900 dark:text-white text-lg flex items-center gap-2">
             🃏 <span>OCC Planning Poker</span>
           </span>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-gray-500 dark:text-gray-400">Voting as</span>
+            <span className="text-white">Voting as</span>
             <span className="font-semibold text-gray-900 dark:text-white">
               {voterName}
             </span>
@@ -206,7 +206,7 @@ function Home() {
 
       <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
         {/* ── Ticket banner ── */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+        <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
           {editingTicket ? (
             <div className="flex gap-2">
               <input
@@ -245,33 +245,28 @@ function Home() {
               }}
             >
               <div className="flex-1">
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">
-                  Currently voting on
+                <p className="text-xs font-medium uppercase tracking-wider mb-1">
+                  Currently voting on (optional):
                 </p>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl font-bold text-gray-900">
                   {roomData?.ticketName || (
-                    <span className="text-gray-400 dark:text-gray-500 font-normal italic">
+                      <span className="text-gray-400 dark:text-gray-500 font-normal italic">
                       No ticket — click to set one
                     </span>
                   )}
                 </h2>
               </div>
-              {roomData && !roomData.revealed && (
-                <span className="text-gray-300 dark:text-gray-600 group-hover:text-blue-400 transition-colors text-lg mt-1">
-                  ✏️
-                </span>
-              )}
             </button>
           )}
 
-          <p className="text-xs text-gray-400 mt-2">{statusText}</p>
+          <p className="text-xs mt-2">{statusText}</p>
         </div>
 
         {/* ── Voting cards ── */}
         {!roomData?.revealed && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
-              Your vote — pick a card
+          <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <p className="text-xs font-medium uppercase tracking-wider mb-4">
+              Pick a card to vote
             </p>
             <div className="grid grid-cols-9 gap-2">
               {STORY_POINTS.map((point) => {
@@ -281,7 +276,7 @@ function Home() {
                     key={point}
                     onClick={() => handleVote(point)}
                     className={[
-                      'aspect-2/3 flex items-center justify-center rounded-xl text-base font-bold',
+                      'aspect-2/3 flex items-center justify-center rounded-xl text-base font-bold cursor-pointer',
                       'border-2 transition-all duration-150 select-none',
                       'hover:-translate-y-1 hover:shadow-md active:scale-95',
                       selected
@@ -305,20 +300,20 @@ function Home() {
 
         {/* ── Results card (after reveal) ── */}
         {roomData?.revealed && average && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 text-center">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+          <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 text-center">
+            <p className="text-xs font-medium uppercase tracking-wider mb-2">
               Average estimate
             </p>
             <p className="text-6xl font-extrabold text-blue-600 dark:text-blue-400">
               {average}
             </p>
-            <p className="text-xs text-gray-400 mt-1">story points</p>
+            <p className="text-xs mt-1">story points</p>
           </div>
         )}
 
         {/* ── Participants ── */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+        <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+          <p className="text-xs font-medium uppercase tracking-wider mb-4">
             Participants
           </p>
           <div className="flex flex-col gap-2">
@@ -346,7 +341,7 @@ function Home() {
             )}
 
             {!roomData && (
-              <p className="text-sm text-gray-400 animate-pulse">Connecting…</p>
+              <p className="text-sm animate-pulse">Connecting…</p>
             )}
           </div>
         </div>
@@ -404,14 +399,23 @@ function Home() {
             </div>
           )}
 
-          {/* ── Clear votes ── */}
-          {roomData && !showClearVotesConfirm && (
-            <button
-              onClick={() => setShowClearVotesConfirm(true)}
-              className="w-full border-2 border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 font-medium py-2.5 rounded-xl transition-colors text-sm"
-            >
-              🧹 Clear Votes
-            </button>
+          {/* ── Clear/Reset actions ── */}
+          {roomData && !showClearVotesConfirm && !showClearConfirm && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button
+                onClick={() => setShowClearVotesConfirm(true)}
+                className="w-full border-2 border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 font-medium py-2.5 rounded-xl transition-colors text-sm"
+              >
+                🧹 Clear Votes
+              </button>
+
+              <button
+                onClick={() => setShowClearConfirm(true)}
+                className="w-full border-2 border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium py-2.5 rounded-xl transition-colors text-sm"
+              >
+                🗑 Reset Room
+              </button>
+            </div>
           )}
 
           {showClearVotesConfirm && (
@@ -436,15 +440,6 @@ function Home() {
             </div>
           )}
 
-          {/* ── Clear room ── */}
-          {roomData && !showClearConfirm && (
-            <button
-              onClick={() => setShowClearConfirm(true)}
-              className="w-full border-2 border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium py-2.5 rounded-xl transition-colors text-sm"
-            >
-              🗑 Clear Room
-            </button>
-          )}
 
           {showClearConfirm && (
             <div className="border-2 border-red-200 dark:border-red-800 rounded-xl p-4 flex flex-col gap-3 bg-red-50 dark:bg-red-900/10">
@@ -507,7 +502,7 @@ function ParticipantRow({
         </span>
       )
     }
-    return <span className="text-gray-400 text-xs">—</span>
+    return <span className="text-xs">—</span>
   })()
   return (
     <div
