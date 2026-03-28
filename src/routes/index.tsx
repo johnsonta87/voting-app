@@ -5,6 +5,10 @@ import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
 import EntryScreen from '~/components/EntryScreen.tsx'
 import Header from '~/components/Header.tsx'
+import Participants from '~/components/Participants.tsx'
+import AverageEstimate from '~/components/AverageEstimate.tsx'
+import VotingCards from '~/components/VotingCards.tsx'
+import TicketBanner from '~/components/TicketBanner.tsx'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -47,7 +51,7 @@ function Home() {
     const savedRoomId = localStorage.getItem('roomId')
     if (savedRoomId) setRoomId(savedRoomId as Id<'rooms'>)
 
-    // Always ensure a room exists (idempotent)
+    // Always ensure a room exists
     getOrCreateRoom({}).then((id) => {
       setRoomId(id)
       localStorage.setItem('roomId', id)
@@ -95,6 +99,16 @@ function Home() {
 
   const handleClearRoom = () => {
     if (!roomId) return
+    // Prevent clearing if already in initial state (no votes, no ticket name)
+    const isInitialState =
+      (roomData?.votes.filter((v) => v.hasVoted).length ?? 0) === 0 &&
+      (roomData?.ticketName.trim().length ?? 0) === 0
+    if (isInitialState) {
+      setShowClearConfirm(false)
+      setShowNewRound(false)
+      setEditingTicket(false)
+      return
+    }
     void clearRoomMut({ roomId })
     setShowClearConfirm(false)
     setShowNewRound(false)
@@ -136,8 +150,6 @@ function Home() {
     return `${votedCount} ${plural} cast · hidden until revealed`
   })()
 
-  // ── Loading / SSR skeleton ────────────────────────────────────────────────
-
   if (!isClient) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 to-blue-50 dark:from-gray-900 dark:to-gray-800">
@@ -162,150 +174,34 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-800">
-      {/* ── Header ── */}
       <Header voterName={voterName} onChangeName={handleChangeName} />
 
       <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
-        {/* ── Ticket banner ── */}
-        <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-          {editingTicket ? (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={ticketDraft}
-                onChange={(e) => setTicketDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSaveTicket()
-                  if (e.key === 'Escape') setEditingTicket(false)
-                }}
-                className="flex-1 border-2 border-blue-400 rounded-lg px-3 py-2 text-base focus:outline-none dark:bg-gray-700 dark:text-white"
-                autoFocus
-              />
-              <button
-                onClick={handleSaveTicket}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditingTicket(false)}
-                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm font-medium"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="group flex items-start gap-2 w-full text-left"
-              onClick={() => {
-                if (roomData && !roomData.revealed) {
-                  setTicketDraft(roomData.ticketName)
-                  setEditingTicket(true)
-                }
-              }}
-            >
-              <div className="flex-1">
-                <p className="text-xs font-medium uppercase tracking-wider mb-1">
-                  Currently voting on (optional):
-                </p>
-                <h2 className="text-xl font-bold ">
-                  {roomData?.ticketName || (
-                      <span className="text-gray-400 dark:text-gray-500 font-normal italic">
-                      No ticket — click to set one
-                    </span>
-                  )}
-                </h2>
-              </div>
-            </button>
-          )}
+        <TicketBanner
+          roomData={roomData}
+          editingTicket={editingTicket}
+          ticketDraft={ticketDraft}
+          setTicketDraft={setTicketDraft}
+          handleSaveTicket={handleSaveTicket}
+          setEditingTicket={setEditingTicket}
+          statusText={statusText}
+        />
 
-          <p className="text-xs mt-2">{statusText}</p>
-        </div>
+        <VotingCards
+          storyPoints={STORY_POINTS}
+          mySelectedValue={mySelectedValue}
+          handleVote={handleVote}
+          revealed={roomData?.revealed}
+        />
 
-        {/* ── Voting cards ── */}
-        {!roomData?.revealed && (
-          <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-            <p className="text-xs font-medium uppercase tracking-wider mb-4">
-              Pick a card to vote
-            </p>
-            <div className="grid grid-cols-9 gap-2">
-              {STORY_POINTS.map((point) => {
-                const selected = mySelectedValue === point
-                return (
-                  <button
-                    key={point}
-                    onClick={() => handleVote(point)}
-                    className={[
-                      'aspect-2/3 flex items-center justify-center rounded-xl text-base font-bold cursor-pointer',
-                      'border-2 transition-all duration-150 select-none',
-                      'hover:-translate-y-1 hover:shadow-md active:scale-95',
-                      selected
-                        ? 'border-blue-500 bg-blue-500 text-white shadow-lg -translate-y-1'
-                        : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-blue-400',
-                    ].join(' ')}
-                  >
-                    {point}
-                  </button>
-                )
-              })}
-            </div>
-            {mySelectedValue && (
-              <p className="text-sm text-blue-600 dark:text-blue-400 mt-3 font-medium text-center">
-                You selected <strong>{mySelectedValue}</strong> · tap another
-                card to change
-              </p>
-            )}
-          </div>
-        )}
+        <AverageEstimate average={roomData?.revealed ? average : null} />
 
-        {/* ── Results card (after reveal) ── */}
-        {roomData?.revealed && average && (
-          <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 text-center">
-            <p className="text-xs font-medium uppercase tracking-wider mb-2">
-              Average estimate
-            </p>
-            <p className="text-6xl font-extrabold text-blue-600 dark:text-blue-400">
-              {average}
-            </p>
-            <p className="text-xs mt-1">story points</p>
-          </div>
-        )}
-
-        {/* ── Participants ── */}
-        <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-          <p className="text-xs font-medium uppercase tracking-wider mb-4">
-            Participants
-          </p>
-          <div className="flex flex-col gap-2">
-            {/* Voters from DB */}
-            {roomData?.votes.map((vote) => (
-              <ParticipantRow
-                key={vote.voterName}
-                name={vote.voterName}
-                isMe={vote.voterName === voterName}
-                hasVoted={vote.hasVoted}
-                value={vote.value ?? null}
-                revealed={roomData.revealed}
-              />
-            ))}
-
-            {/* Current user if not yet in the list */}
-            {!iAmInList && roomData && (
-              <ParticipantRow
-                name={voterName}
-                isMe={true}
-                hasVoted={false}
-                value={null}
-                revealed={roomData.revealed}
-              />
-            )}
-
-            {!roomData && (
-              <p className="text-sm animate-pulse">Connecting…</p>
-            )}
-          </div>
-        </div>
+        <Participants
+          votes={roomData?.votes}
+          voterName={voterName}
+          revealed={roomData?.revealed ?? false}
+          iAmInList={iAmInList}
+        />
 
         {/* ── Action bar ── */}
         <div className="flex flex-col gap-3">
@@ -313,7 +209,7 @@ function Home() {
             <button
               onClick={handleReveal}
               disabled={votedCount === 0}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base"
+              className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base"
             >
               👀 Reveal Votes
             </button>
@@ -325,9 +221,9 @@ function Home() {
                 setShowNewRound(true)
                 setTimeout(() => newRoundRef.current?.focus(), 50)
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors text-base"
+              className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors text-base"
             >
-              🔄 Start New Round
+              Start New Round
             </button>
           )}
 
@@ -343,17 +239,17 @@ function Home() {
                   if (e.key === 'Escape') setShowNewRound(false)
                 }}
                 placeholder="Next ticket name (optional)"
-                className="flex-1 border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                className="flex-1 border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 dark:bg-gray-700 text-white"
               />
               <button
                 onClick={handleNewRound}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-xl transition-colors"
+                className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-xl transition-colors"
               >
                 Start
               </button>
               <button
                 onClick={() => setShowNewRound(false)}
-                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold px-4 py-3 rounded-xl transition-colors"
+                className="bg-gray-100 cursor-pointer hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold px-4 py-3 rounded-xl transition-colors"
               >
                 ✕
               </button>
@@ -361,12 +257,12 @@ function Home() {
           )}
 
           {/* ── Clear/Reset actions ── */}
-          {roomData && !showClearVotesConfirm && !showClearConfirm && (
+          {!roomData?.revealed && roomData && !showClearVotesConfirm && !showClearConfirm && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
                 onClick={() => setShowClearVotesConfirm(true)}
                 disabled={votedCount === 0}
-                className="w-full border-2 border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
               >
                 🧹 Clear Votes
               </button>
@@ -374,14 +270,15 @@ function Home() {
               <button
                 onClick={() => setShowClearConfirm(true)}
                 disabled={disableResetRoom}
-                className="w-full border-2 border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                className="w-full border-2 cursor-pointer border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
               >
-                🗑 Reset Room
+                🔄 Reset Room
               </button>
             </div>
           )}
 
-          {showClearVotesConfirm && (
+          {/* Hide confirm dialogs if votes are revealed */}
+          {!roomData?.revealed && showClearVotesConfirm && (
             <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900/10">
               <p className="text-sm text-amber-700 dark:text-amber-300 font-medium text-center">
                 Clear all votes for everyone? The ticket name will stay.
@@ -403,8 +300,7 @@ function Home() {
             </div>
           )}
 
-
-          {showClearConfirm && (
+          {!roomData?.revealed && showClearConfirm && (
             <div className="border-2 border-red-200 dark:border-red-800 rounded-xl p-4 flex flex-col gap-3 bg-red-50 dark:bg-red-900/10">
               <p className="text-sm text-red-700 dark:text-red-300 font-medium text-center">
                 Remove all votes and the ticket name for everyone?
@@ -431,69 +327,4 @@ function Home() {
   )
 }
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function ParticipantRow({
-  name,
-  isMe,
-  hasVoted,
-  value,
-  revealed,
-}: Readonly<{
-  name: string
-  isMe: boolean
-  hasVoted: boolean
-  value: string | null
-  revealed: boolean
-}>) {
-  const voteDisplay = (() => {
-    if (!revealed) {
-      return hasVoted ? (
-        <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center gap-1">
-          ✅ Voted
-        </span>
-      ) : (
-        <span className="text-amber-500 dark:text-amber-400 text-sm font-medium flex items-center gap-1">
-          ⏳ Thinking…
-        </span>
-      )
-    }
-    if (value !== null) {
-      return (
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-600 text-white font-bold text-base shadow-sm">
-          {value}
-        </span>
-      )
-    }
-    return <span className="text-xs">—</span>
-  })()
-  return (
-    <div
-      className={[
-        'flex items-center justify-between px-4 py-3 rounded-xl',
-        isMe
-          ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800'
-          : 'bg-gray-50 dark:bg-gray-700/40',
-      ].join(' ')}
-    >
-      <div className="flex items-center gap-2">
-        <span className="text-lg">👤</span>
-        <span
-          className={[
-            'font-medium text-sm',
-            isMe
-              ? 'text-blue-700 dark:text-blue-300'
-              : 'text-gray-700 dark:text-gray-300',
-          ].join(' ')}
-        >
-          {name}
-          {isMe && ' (you)'}
-        </span>
-      </div>
-
-      <div>
-        {voteDisplay}
-      </div>
-    </div>
-  )
-}
+export default Home

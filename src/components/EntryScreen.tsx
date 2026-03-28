@@ -17,8 +17,12 @@ function EntryScreen({
       <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm">
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🃏</div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">OCC Planning Poker</h1>
-          <p className="text-white text-sm mt-1">Enter your name to join the session</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-400">
+            OCC Planning Poker
+          </h1>
+          <p className="text-gray-900 dark:text-gray-400 text-sm mt-1">
+            Enter your name to join the session
+          </p>
         </div>
         <div className="flex flex-col gap-3">
           <input
