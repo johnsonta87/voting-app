@@ -2,8 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 /**
- * Returns the single shared room's ID, creating it if it doesn't exist yet.
- * Idempotent: subsequent calls always return the same first room.
+ * returns the single shared room's ID, creating it if it doesn't exist yet.
  */
 export const getOrCreateRoom = mutation({
   args: {},
@@ -16,11 +15,6 @@ export const getOrCreateRoom = mutation({
   },
 });
 
-/**
- * Real-time subscription for the voting room.
- * Each voter always sees their own selected value.
- * Other voters' values are hidden until the room is revealed.
- */
 export const getVotes = query({
   args: {
     roomId: v.id("rooms"),
@@ -50,9 +44,6 @@ export const getVotes = query({
   },
 });
 
-/**
- * Cast or update a vote for a given voter in the room.
- */
 export const submitVote = mutation({
   args: {
     roomId: v.id("rooms"),
@@ -79,9 +70,6 @@ export const submitVote = mutation({
   },
 });
 
-/**
- * Reveal all votes so every participant can see each other's selections.
- */
 export const revealVotes = mutation({
   args: { roomId: v.id("rooms") },
   handler: async (ctx, args) => {
@@ -89,10 +77,6 @@ export const revealVotes = mutation({
   },
 });
 
-/**
- * Reset the room for a new voting round.
- * Clears all votes and marks the room as un-revealed with a new ticket name.
- */
 export const resetRoom = mutation({
   args: {
     roomId: v.id("rooms"),
@@ -113,9 +97,6 @@ export const resetRoom = mutation({
   },
 });
 
-/**
- * Clear only the votes for the current round, keeping the ticket name intact.
- */
 export const clearVotes = mutation({
   args: { roomId: v.id("rooms") },
   handler: async (ctx, args) => {
@@ -132,9 +113,6 @@ export const clearVotes = mutation({
   },
 });
 
-/**
- * Clear the room to a blank slate: no ticket name, no votes, not revealed.
- */
 export const clearRoom = mutation({
   args: { roomId: v.id("rooms") },
   handler: async (ctx, args) => {

@@ -8,7 +8,7 @@ import Header from '~/components/Header.tsx'
 import Participants from '~/components/Participants.tsx'
 import AverageEstimate from '~/components/AverageEstimate.tsx'
 import VotingCards from '~/components/VotingCards.tsx'
-import TicketBanner from '~/components/TicketBanner.tsx'
+import StatusBanner from '~/components/StatusBanner.tsx'
 import { useRoom } from '~/hooks/useRoom.ts'
 
 export const Route = createFileRoute('/')({
@@ -123,15 +123,12 @@ function Home() {
       : null
 
   const iAmInList = roomData?.votes.some((v) => v.voterName === voterName) ?? false
-  const disableResetRoom =
-    votedCount === 0
 
   const statusText = (() => {
     if (!roomData) return '…'
-    if (roomData.revealed) return '🔓 Votes revealed'
-    if (votedCount === 0) return 'Waiting for votes…'
-    const plural = votedCount === 1 ? 'vote' : 'votes'
-    return `${votedCount} ${plural} cast · hidden until revealed`
+    if (roomData.revealed) return 'Estimates revealed'
+    if (votedCount === 0) return 'Waiting for estimates…'
+    return `${votedCount} voted · hidden until revealed`
   })()
 
   if (!isClient) {
@@ -141,8 +138,6 @@ function Home() {
       </div>
     )
   }
-
-  // ── Name entry screen ─────────────────────────────────────────────────────
 
   if (!voterName) {
     return (
@@ -154,14 +149,12 @@ function Home() {
     )
   }
 
-  // ── Main voting room ──────────────────────────────────────────────────────
-
   return (
     <div className="min-h-screen bg-gray-800">
       <Header voterName={voterName} onChangeName={handleChangeName} />
 
       <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
-        <TicketBanner statusText={statusText} />
+        <StatusBanner statusText={statusText} />
 
         <VotingCards
           storyPoints={STORY_POINTS}
@@ -207,21 +200,13 @@ function Home() {
             roomData &&
             !showClearVotesConfirm &&
             !showClearConfirm && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="flex gap-2">
                 <button
                   onClick={() => setShowClearVotesConfirm(true)}
                   disabled={votedCount === 0}
                   className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
                 >
-                  🧹 Clear Votes
-                </button>
-
-                <button
-                  onClick={() => setShowClearConfirm(true)}
-                  disabled={disableResetRoom}
-                  className="w-full border-2 cursor-pointer border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
-                >
-                  🔄 Reset Room
+                  🧹 Clear
                 </button>
               </div>
             )}
@@ -230,7 +215,7 @@ function Home() {
           {!roomData?.revealed && showClearVotesConfirm && (
             <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900/10">
               <p className="text-sm text-amber-700 dark:text-amber-300 font-medium text-center">
-                Clear all votes for everyone? The ticket name will stay.
+                Clear all votes for everyone?
               </p>
               <div className="flex gap-2">
                 <button
@@ -252,7 +237,7 @@ function Home() {
           {!roomData?.revealed && showClearConfirm && (
             <div className="border-2 border-red-200 dark:border-red-800 rounded-xl p-4 flex flex-col gap-3 bg-red-50 dark:bg-red-900/10">
               <p className="text-sm text-red-700 dark:text-red-300 font-medium text-center">
-                Remove all votes and the ticket name for everyone?
+                Remove all votes for everyone?
               </p>
               <div className="flex gap-2">
                 <button

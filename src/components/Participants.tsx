@@ -73,38 +73,43 @@ function ParticipantRow({
   );
 }
 
-const Participants: React.FC<ParticipantsProps> = ({ votes, voterName, revealed, iAmInList }) => (
+const Participants: React.FC<ParticipantsProps> = ({
+  votes,
+  voterName,
+  revealed,
+  iAmInList,
+}) => (
   <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
-	<p className="text-xs font-medium uppercase tracking-wider mb-4">
-	  Participants
-	</p>
-	<div className="flex flex-col gap-2">
-	  {votes?.map((vote) => (
-		<ParticipantRow
-		  key={vote.voterName}
-		  name={vote.voterName}
-		  isMe={vote.voterName === voterName}
-		  hasVoted={vote.hasVoted}
-		  value={vote.value || ''}
-		  revealed={revealed}
-		/>
-	  ))}
+    <p className="text-xs font-medium uppercase tracking-wider mb-4">
+      Participants
+    </p>
+    <div className="flex flex-col gap-2">
+      {/* Current user if not yet in the list */}
+      {!iAmInList && (
+        <ParticipantRow
+          name={voterName}
+          isMe={true}
+          hasVoted={false}
+          value={''}
+          revealed={revealed}
+        />
+      )}
 
-	  {/* Current user if not yet in the list */}
-	  {!iAmInList && (
-		<ParticipantRow
-		  name={voterName}
-		  isMe={true}
-		  hasVoted={false}
-		  value={''}
-		  revealed={revealed}
-		/>
-	  )}
+      {votes?.map((vote) => (
+        <ParticipantRow
+          key={vote.voterName}
+          name={vote.voterName}
+          isMe={vote.voterName === voterName}
+          hasVoted={vote.hasVoted}
+          value={vote.value || ''}
+          revealed={revealed}
+        />
+      ))}
 
-	  {!votes && <p className="text-sm animate-pulse">Loading…</p>}
-	</div>
+      {!votes && <p className="text-sm animate-pulse">Loading…</p>}
+    </div>
   </div>
-);
+)
 
 export default Participants;
 
