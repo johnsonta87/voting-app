@@ -3,6 +3,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
+import EntryScreen from '~/components/EntryScreen.tsx'
+import Header from '~/components/Header.tsx'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -11,7 +13,6 @@ export const Route = createFileRoute('/')({
 const STORY_POINTS = ['1', '2', '3', '5', '8', '13', '21', '?', '☕']
 
 function Home() {
-  // SSR-safe: keep everything empty until after mount
   const [isClient, setIsClient] = useState(false)
   const [voterName, setVoterName] = useState('')
   const [nameInput, setNameInput] = useState('')
@@ -149,35 +150,11 @@ function Home() {
 
   if (!voterName) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm">
-          <div className="text-center mb-6">
-            <div className="text-5xl mb-3">🃏</div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">OCC Planning Poker</h1>
-            <p className="text-white text-sm mt-1">
-              Enter your name to join the session
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            <input
-              type="text"
-              value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
-              placeholder="Your name"
-              className="border-2 text-center border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
-              autoFocus
-            />
-            <button
-              onClick={handleJoin}
-              disabled={!nameInput.trim()}
-              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              Join Session
-            </button>
-          </div>
-        </div>
-      </div>
+      <EntryScreen
+        nameInput={nameInput}
+        onNameInputChange={setNameInput}
+        onJoin={handleJoin}
+      />
     )
   }
 
@@ -186,25 +163,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gray-800">
       {/* ── Header ── */}
-      <header className="bg-white dark:bg-[#00203e] border-b border-gray-100 dark:border-gray-700 shadow-sm">
-        <div className="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
-          <span className="font-bold text-gray-900 dark:text-white text-lg flex items-center gap-2">
-            🃏 <span>OCC Planning Poker</span>
-          </span>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-white">Voting as</span>
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {voterName}
-            </span>
-            <button
-              onClick={handleChangeName}
-              className="text-xs text-blue-500 hover:text-blue-700 dark:hover:text-blue-300 underline ml-1"
-            >
-              change
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header voterName={voterName} onChangeName={handleChangeName} />
 
       <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
         {/* ── Ticket banner ── */}
