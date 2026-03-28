@@ -1,7 +1,7 @@
 type HeaderProps = {
   voterName: string
   onChangeName: () => void
-  title?: string
+  title: string
   changeLabel?: string
 }
 
