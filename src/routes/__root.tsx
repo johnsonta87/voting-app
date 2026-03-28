@@ -21,7 +21,7 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'OCC Planning Poker',
       },
     ],
     links: [
@@ -59,11 +59,12 @@ function RootComponent() {
   )
 }
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html>
+    <html lang="en">
       <head>
         <HeadContent />
+        <title>OCC Planning Poker</title>
       </head>
       <body>
         {children}
