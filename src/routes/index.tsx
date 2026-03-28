@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
@@ -9,6 +9,7 @@ import Participants from '~/components/Participants.tsx'
 import AverageEstimate from '~/components/AverageEstimate.tsx'
 import VotingCards from '~/components/VotingCards.tsx'
 import TicketBanner from '~/components/TicketBanner.tsx'
+import { useRoom } from '~/hooks/useRoom.ts'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -17,24 +18,17 @@ export const Route = createFileRoute('/')({
 const STORY_POINTS = ['1', '2', '3', '5', '8', '13', '21', '?', '☕']
 
 function Home() {
-  const [isClient, setIsClient] = useState(false)
-  const [voterName, setVoterName] = useState('')
+  const { isClient, voterName, setVoterName, roomId, setRoomId } = useRoom();
   const [nameInput, setNameInput] = useState('')
-  const [roomId, setRoomId] = useState<Id<'rooms'> | null>(null)
   const [showNewRound, setShowNewRound] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [showClearVotesConfirm, setShowClearVotesConfirm] = useState(false)
-  const [newTicketInput, setNewTicketInput] = useState('')
-  const [editingTicket, setEditingTicket] = useState(false)
-  const [ticketDraft, setTicketDraft] = useState('')
-  const newRoundRef = useRef<HTMLInputElement>(null)
 
   const getOrCreateRoom = useMutation(api.voting.getOrCreateRoom)
-  const submitVoteMut = useMutation(api.voting.submitVote)
-  const revealVotesMut = useMutation(api.voting.revealVotes)
-  const resetRoomMut = useMutation(api.voting.resetRoom)
-  const clearRoomMut = useMutation(api.voting.clearRoom)
-  const updateTicketMut = useMutation(api.voting.updateTicketName)
+  const submitVoteMutation = useMutation(api.voting.submitVote)
+  const revealVotesMutation = useMutation(api.voting.revealVotes)
+  const resetRoomMutation = useMutation(api.voting.resetRoom)
+  const clearRoomMutation = useMutation(api.voting.clearRoom)
 
   // Real-time room data — "skip" until we have both roomId and voterName
   const roomData = useQuery(
@@ -42,9 +36,11 @@ function Home() {
     roomId && voterName ? { roomId, voterName } : 'skip',
   )
 
+  // Remove destructure from useVote, use only the derived state below
+  // const { myVote, mySelectedValue, votedCount } = useVote(roomData, voterName)
+
   // Hydrate state from localStorage after first render
   useEffect(() => {
-    setIsClient(true)
     const savedName = localStorage.getItem('voterName') ?? ''
     setVoterName(savedName)
 
@@ -75,55 +71,43 @@ function Home() {
 
   const handleVote = (point: string) => {
     if (!roomId || !voterName || roomData?.revealed) return
-    void submitVoteMut({ roomId, voterName, value: point })
+    void submitVoteMutation({ roomId, voterName, value: point })
   }
 
   const handleReveal = () => {
     if (!roomId) return
-    void revealVotesMut({ roomId })
+    void revealVotesMutation({ roomId })
   }
 
   const handleNewRound = () => {
     if (!roomId) return
-    const ticketName = newTicketInput.trim() || 'New Ticket'
-    void resetRoomMut({ roomId, ticketName })
-    setNewTicketInput('')
+    void resetRoomMutation({ roomId })
     setShowNewRound(false)
-  }
-
-  const handleSaveTicket = () => {
-    if (!roomId || !ticketDraft.trim()) return
-    void updateTicketMut({ roomId, ticketName: ticketDraft.trim() })
-    setEditingTicket(false)
   }
 
   const handleClearRoom = () => {
     if (!roomId) return
-    // Prevent clearing if already in initial state (no votes, no ticket name)
+    // Prevent clearing if already in initial state (no votes)
     const isInitialState =
-      (roomData?.votes.filter((v) => v.hasVoted).length ?? 0) === 0 &&
-      (roomData?.ticketName.trim().length ?? 0) === 0
+      (roomData?.votes.filter((v) => v.hasVoted).length ?? 0) === 0
     if (isInitialState) {
       setShowClearConfirm(false)
       setShowNewRound(false)
-      setEditingTicket(false)
       return
     }
-    void clearRoomMut({ roomId })
+    void clearRoomMutation({ roomId })
     setShowClearConfirm(false)
     setShowNewRound(false)
-    setEditingTicket(false)
   }
 
   const handleClearVotes = () => {
     if (!roomId || !roomData) return
-    void resetRoomMut({ roomId, ticketName: roomData.ticketName || 'New Ticket' })
+    void resetRoomMutation({ roomId })
     setShowClearVotesConfirm(false)
     setShowNewRound(false)
   }
 
   // ── Derived state ─────────────────────────────────────────────────────────
-
   const myVote = roomData?.votes.find((v) => v.voterName === voterName)
   const mySelectedValue = myVote?.value ?? null
   const votedCount = roomData?.votes.filter((v) => v.hasVoted).length ?? 0
@@ -140,7 +124,7 @@ function Home() {
 
   const iAmInList = roomData?.votes.some((v) => v.voterName === voterName) ?? false
   const disableResetRoom =
-    votedCount === 0 && (roomData?.ticketName.trim().length ?? 0) === 0
+    votedCount === 0
 
   const statusText = (() => {
     if (!roomData) return '…'
@@ -177,15 +161,7 @@ function Home() {
       <Header voterName={voterName} onChangeName={handleChangeName} />
 
       <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
-        <TicketBanner
-          roomData={roomData}
-          editingTicket={editingTicket}
-          ticketDraft={ticketDraft}
-          setTicketDraft={setTicketDraft}
-          handleSaveTicket={handleSaveTicket}
-          setEditingTicket={setEditingTicket}
-          statusText={statusText}
-        />
+        <TicketBanner statusText={statusText} />
 
         <VotingCards
           storyPoints={STORY_POINTS}
@@ -215,67 +191,40 @@ function Home() {
             </button>
           )}
 
-          {roomData?.revealed && !showNewRound && (
-            <button
-              onClick={() => {
-                setShowNewRound(true)
-                setTimeout(() => newRoundRef.current?.focus(), 50)
-              }}
-              className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors text-base"
-            >
-              Start New Round
-            </button>
-          )}
-
-          {showNewRound && (
+          {roomData?.revealed && (
             <div className="flex gap-2">
-              <input
-                ref={newRoundRef}
-                type="text"
-                value={newTicketInput}
-                onChange={(e) => setNewTicketInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleNewRound()
-                  if (e.key === 'Escape') setShowNewRound(false)
-                }}
-                placeholder="Next ticket name (optional)"
-                className="flex-1 border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 dark:bg-gray-700 text-white"
-              />
               <button
                 onClick={handleNewRound}
-                className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-xl transition-colors"
+                className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-xl transition-colors flex-1"
               >
-                Start
-              </button>
-              <button
-                onClick={() => setShowNewRound(false)}
-                className="bg-gray-100 cursor-pointer hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold px-4 py-3 rounded-xl transition-colors"
-              >
-                ✕
+                Start New Round
               </button>
             </div>
           )}
 
           {/* ── Clear/Reset actions ── */}
-          {!roomData?.revealed && roomData && !showClearVotesConfirm && !showClearConfirm && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <button
-                onClick={() => setShowClearVotesConfirm(true)}
-                disabled={votedCount === 0}
-                className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
-              >
-                🧹 Clear Votes
-              </button>
+          {!roomData?.revealed &&
+            roomData &&
+            !showClearVotesConfirm &&
+            !showClearConfirm && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  onClick={() => setShowClearVotesConfirm(true)}
+                  disabled={votedCount === 0}
+                  className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                >
+                  🧹 Clear Votes
+                </button>
 
-              <button
-                onClick={() => setShowClearConfirm(true)}
-                disabled={disableResetRoom}
-                className="w-full border-2 cursor-pointer border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
-              >
-                🔄 Reset Room
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={() => setShowClearConfirm(true)}
+                  disabled={disableResetRoom}
+                  className="w-full border-2 cursor-pointer border-red-200 dark:border-red-900 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                >
+                  🔄 Reset Room
+                </button>
+              </div>
+            )}
 
           {/* Hide confirm dialogs if votes are revealed */}
           {!roomData?.revealed && showClearVotesConfirm && (

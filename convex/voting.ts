@@ -11,7 +11,6 @@ export const getOrCreateRoom = mutation({
     const room = await ctx.db.query("rooms").first();
     if (room) return room._id;
     return await ctx.db.insert("rooms", {
-      ticketName: "Ticket #1",
       revealed: false,
     });
   },
@@ -37,7 +36,6 @@ export const getVotes = query({
       .take(200);
 
     return {
-      ticketName: room.ticketName,
       revealed: room.revealed,
       votes: votes.map((vote) => ({
         voterName: vote.voterName,
@@ -98,12 +96,10 @@ export const revealVotes = mutation({
 export const resetRoom = mutation({
   args: {
     roomId: v.id("rooms"),
-    ticketName: v.string(),
   },
   handler: async (ctx, args) => {
     await ctx.db.patch("rooms", args.roomId, {
       revealed: false,
-      ticketName: args.ticketName,
     });
 
     const votes = await ctx.db
@@ -144,7 +140,6 @@ export const clearRoom = mutation({
   handler: async (ctx, args) => {
     await ctx.db.patch("rooms", args.roomId, {
       revealed: false,
-      ticketName: "",
     });
 
     const votes = await ctx.db
@@ -155,19 +150,6 @@ export const clearRoom = mutation({
     for (const vote of votes) {
       await ctx.db.delete("votes", vote._id);
     }
-  },
-});
-
-/**
- * Update the ticket name being voted on without resetting votes.
- */
-export const updateTicketName = mutation({
-  args: {
-    roomId: v.id("rooms"),
-    ticketName: v.string(),
-  },
-  handler: async (ctx, args) => {
-    await ctx.db.patch("rooms", args.roomId, { ticketName: args.ticketName });
   },
 });
 

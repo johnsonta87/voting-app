@@ -3,7 +3,6 @@ import { v } from "convex/values";
 
 export default defineSchema({
   rooms: defineTable({
-    ticketName: v.string(),
     revealed: v.boolean(),
   }),
   votes: defineTable({
