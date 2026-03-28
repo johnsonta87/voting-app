@@ -20,7 +20,7 @@ const STORY_POINTS = ['1', '2', '3', '5', '8', '13', '21', '?', '☕']
 function Home() {
   const { isClient, voterName, setVoterName, roomId, setRoomId } = useRoom();
   const [nameInput, setNameInput] = useState('')
-  const [showNewRound, setShowNewRound] = useState(false)
+  const [_, setShowNewRound] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [showClearVotesConfirm, setShowClearVotesConfirm] = useState(false)
 
@@ -185,7 +185,7 @@ function Home() {
             <button
               onClick={handleReveal}
               disabled={votedCount === 0}
-              className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base"
+              className={`w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base ${roomData && roomData.votes.length > 0 ? 'animate-pulse' : ''}`}
             >
               👀 Reveal Votes
             </button>
