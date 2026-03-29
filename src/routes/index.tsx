@@ -133,7 +133,7 @@ function Home() {
 
   if (!isClient) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="animate-pulse">Loading…</p>
       </div>
     )
@@ -150,7 +150,7 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-800">
+    <div className="min-h-screen">
       <Header voterName={voterName} onChangeName={handleChangeName} />
 
       <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
@@ -204,7 +204,7 @@ function Home() {
                 <button
                   onClick={() => setShowClearVotesConfirm(true)}
                   disabled={votedCount === 0}
-                  className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                  className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 bg-orange-900 hover:bg-amber-50 dark:hover:bg-amber-900/50 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
                 >
                   🧹 Clear
                 </button>
@@ -213,7 +213,7 @@ function Home() {
 
           {/* Hide confirm dialogs if votes are revealed */}
           {!roomData?.revealed && showClearVotesConfirm && (
-            <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900/10">
+            <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900/50">
               <p className="text-sm text-amber-700 dark:text-amber-300 font-medium text-center">
                 Clear all votes for everyone?
               </p>
