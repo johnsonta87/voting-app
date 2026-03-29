@@ -16,7 +16,9 @@ function EntryScreen({
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm dark:border-2">
         <div className="text-center mb-6">
-          <div className="text-5xl mb-3">🃏</div>
+          <div className="text-5xl mb-3">
+            <img src={'/assets/images/logo.png'} alt="Logo" className="w-16 mx-auto" />
+          </div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             OCC Planning Poker
           </h1>

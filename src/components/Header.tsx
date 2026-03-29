@@ -15,7 +15,12 @@ function Header({
     <header className="bg-[#00203e] border-b border-gray-100 dark:border-gray-400 shadow-sm">
       <div className="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
         <span className="font-bold text-white text-lg flex items-center gap-2">
-          🃏 <span>{title}</span>
+          <img
+            src={'/assets/images/logo.png'}
+            alt="Logo"
+            className="w-8 mx-auto"
+          />{' '}
+          <span>{title}</span>
         </span>
         <div className="flex items-center gap-2 text-sm">
           <span className="text-white">Voting as</span>
