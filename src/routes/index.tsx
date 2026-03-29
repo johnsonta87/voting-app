@@ -178,7 +178,7 @@ function Home() {
             <button
               onClick={handleReveal}
               disabled={votedCount === 0}
-              className={`w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base ${roomData && roomData.votes.length > 0 ? 'animate-pulse' : ''}`}
+              className={`w-full cursor-pointer bg-[#00aaa6] hover:bg-[#017f7c] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base`}
             >
               👀 Reveal Votes
             </button>
@@ -204,7 +204,7 @@ function Home() {
                 <button
                   onClick={() => setShowClearVotesConfirm(true)}
                   disabled={votedCount === 0}
-                  className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 bg-orange-900 hover:bg-amber-50 dark:hover:bg-amber-900/50 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                  className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 bg-orange-900 hover:bg-orange-400 dark:hover:bg-amber-900/90 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
                 >
                   🧹 Clear
                 </button>
@@ -213,8 +213,8 @@ function Home() {
 
           {/* Hide confirm dialogs if votes are revealed */}
           {!roomData?.revealed && showClearVotesConfirm && (
-            <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900/50">
-              <p className="text-sm text-amber-700 dark:text-amber-300 font-medium text-center">
+            <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900">
+              <p className="text-sm font-medium text-center">
                 Clear all votes for everyone?
               </p>
               <div className="flex gap-2">

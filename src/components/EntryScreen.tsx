@@ -13,14 +13,14 @@ function EntryScreen({
 }: EntryScreenProps) {
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-800">
-      <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm dark:border-2">
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🃏</div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-400">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             OCC Planning Poker
           </h1>
-          <p className="text-gray-900 dark:text-gray-400 text-sm mt-1">
+          <p className="text-gray-900 dark:text-white text-sm mt-1">
             Enter your name to join the session
           </p>
         </div>

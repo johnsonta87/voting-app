@@ -12,7 +12,7 @@ function Header({
   changeLabel = 'change',
 }: Readonly<HeaderProps>) {
   return (
-    <header className="bg-[#00203e] border-b border-gray-100 dark:border-gray-700 shadow-sm">
+    <header className="bg-[#00203e] border-b border-gray-100 dark:border-gray-400 shadow-sm">
       <div className="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
         <span className="font-bold text-white text-lg flex items-center gap-2">
           🃏 <span>{title}</span>

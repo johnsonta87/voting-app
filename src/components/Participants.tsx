@@ -79,7 +79,7 @@ const Participants: React.FC<ParticipantsProps> = ({
   revealed,
   iAmInList,
 }) => (
-  <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+  <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-400 p-5">
     <p className="text-xs font-medium uppercase tracking-wider mb-4">
       Participants
     </p>
