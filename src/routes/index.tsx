@@ -147,11 +147,12 @@ function Home() {
       />
 
       <main className="max-w-7xl mx-auto px-5 py-6 flex flex-col gap-5">
-        <h1 className="text-foreground text-3xl font-bold tracking-tighter md:text-5xl mb-2">
+        <h1 className="text-[#00aaa6] text-3xl font-bold tracking-tighter md:text-5xl mb-2">
           OCC Planning Poker
         </h1>
         <p className="text-muted-foreground w-full text-sm font-normal md:px-0">
-          Pick a card to estimate the story, wait for everyone to vote, then reveal and discuss the results to align on a final estimate.
+          Pick a card to estimate the story, wait for everyone to vote, then
+          reveal and discuss the results to align on a final estimate.
         </p>
         <VotingCards
           storyPoints={STORY_POINTS}
@@ -174,13 +175,25 @@ function Home() {
         {/* ── Action bar ── */}
         <div className="flex flex-col gap-3">
           {!roomData?.revealed && (
-            <button
-              onClick={handleReveal}
-              disabled={votedCount === 0}
-              className={`w-full cursor-pointer bg-[#00aaa6] hover:bg-[#017f7c] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base`}
-            >
-              👀 Reveal Votes
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <button
+                onClick={handleReveal}
+                disabled={votedCount === 0}
+                className="w-[250px] cursor-pointer bg-[#00aaa6] hover:bg-[#017f7c] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base"
+              >
+                Reveal Votes
+              </button>
+
+              {!showClearVotesDialog && roomData && (
+                <button
+                  onClick={() => setShowClearVotesDialog(true)}
+                  disabled={votedCount === 0}
+                  className="w-[250px] cursor-pointer bg-black dark:bg-white disabled:opacity-40 disabled:cursor-not-allowed text-white dark:text-black font-semibold py-3 rounded-xl transition-colors text-base"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
           )}
 
           {roomData?.revealed && (
@@ -193,32 +206,17 @@ function Home() {
               </button>
             </div>
           )}
-
-          {/* ── Clear/Reset actions ── */}
-          {!roomData?.revealed &&
-            roomData &&
-                !showClearVotesDialog && (
-              <div className="flex gap-2">
-                <button
-                      onClick={() => setShowClearVotesDialog(true)}
-                  disabled={votedCount === 0}
-                  className="w-full cursor-pointer bg-black dark:bg-white text-white dark:text-black disabled:opacity-40 disabled:cursor-not-allowed font-semibold py-2.5 rounded-xl transition-colors text-sm"
-                >
-                  🧹 Clear
-                </button>
-              </div>
-            )}
         </div>
 
-            <ConfirmDialog
-              cancelLabel="Keep votes"
-              confirmLabel="Yes, clear votes"
-              description="This removes every current vote in the room and starts the round over for everyone."
-              onCancel={() => setShowClearVotesDialog(false)}
-              onConfirm={handleClearVotes}
-              open={!roomData?.revealed && showClearVotesDialog}
-              title="Clear all votes?"
-            />
+        <ConfirmDialog
+          cancelLabel="Cancel"
+          confirmLabel="Yes, clear votes"
+          description="This removes every current vote in the room and starts the round over for everyone."
+          onCancel={() => setShowClearVotesDialog(false)}
+          onConfirm={handleClearVotes}
+          open={!roomData?.revealed && showClearVotesDialog}
+          title="Clear all votes?"
+        />
       </main>
     </div>
   )

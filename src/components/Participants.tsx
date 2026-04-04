@@ -50,7 +50,7 @@ function ParticipantRow({
 	  className={[
 		'flex items-center justify-between px-4 py-3 rounded-md',
 		isMe
-		  ? 'bg-gray-200 dark:bg-gray-400/20 border border-black dark:border-white'
+		  ? 'bg-gray-200 dark:bg-gray-400/20 border border-gray-200 dark:border-white'
 		  : 'bg-gray-50 dark:bg-gray-700/40',
 	  ].join(' ')}
 	>
@@ -79,7 +79,7 @@ const Participants: React.FC<ParticipantsProps> = ({
   revealed,
   iAmInList,
 }) => (
-  <div className="bg-white dark:bg-black">
+  <div className="w-2xl mx-auto bg-white dark:bg-black">
     <p className="text-xs text-black dark:text-white font-medium uppercase tracking-wider mb-4">
       Participants
     </p>

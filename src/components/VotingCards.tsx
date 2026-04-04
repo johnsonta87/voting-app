@@ -28,11 +28,11 @@ const VotingCards: React.FC<VotingCardsProps> = ({
               onClick={() => handleVote(point)}
               className={[
                 'aspect-2/3 flex items-center justify-center rounded-md text-base font-bold cursor-pointer',
-                'border-2 transition-all duration-150 select-none',
+                'border-2 transition-all duration-150 select-none border-gray-200 dark:border-white',
                 'hover:-translate-y-1 hover:shadow-md active:scale-95',
                 selected
                   ? 'bg-[#00aaa6] text-white shadow-lg -translate-y-1'
-                  : 'border-gray-200 dark:border-gray-400 text-gray-700 dark:text-gray-200 hover:border-[#00aaa6]',
+                  : 'text-gray-700 dark:text-gray-200 hover:border-[#00aaa6]',
               ].join(' ')}
             >
               {point}

@@ -36,9 +36,8 @@ function Header({
           >
             {theme === 'dark' ? 'Light' : 'Dark'}
           </button>
-          |
-          <span className="text-black dark:text-white">Voting as</span>
-          <span className="font-semibold text-black dark:text-white">{voterName}</span>
+          |<span className="text-black dark:text-white">Voting as</span>
+          <span className="font-semibold text-[#00aaa6]">{voterName}</span>
           <button
             onClick={onChangeName}
             className="text-xs text-black dark:text-white underline ml-1"
