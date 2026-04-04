@@ -22,7 +22,7 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'OCC Planning Poker',
+        title: 'Team Planning Poker',
       },
     ],
     links: [
@@ -66,7 +66,7 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <HeadContent />
-        <title>OCC Planning Poker</title>
+        <title>Team Planning Poker</title>
       </head>
       <body>
         {children}

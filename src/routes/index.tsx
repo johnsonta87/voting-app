@@ -148,7 +148,7 @@ function Home() {
 
       <main className="max-w-7xl mx-auto px-5 py-6 flex flex-col gap-5">
         <h1 className="text-[#00aaa6] text-3xl font-bold tracking-tighter md:text-5xl mb-2">
-          OCC Planning Poker
+          Team Planning Poker
         </h1>
         <p className="text-muted-foreground w-full text-sm font-normal md:px-0">
           Pick a card to estimate the story, wait for everyone to vote, then

@@ -42,7 +42,7 @@ function EntryScreen(props: EntryScreenProps) {
             />
           </div>
           <h1 className="text-2xl font-bold text-[#00aaa6]">
-            OCC Planning Poker
+            Team Planning Poker
           </h1>
           <p className="text-gray-900 dark:text-white text-sm mt-1">
             Enter your name to join the session

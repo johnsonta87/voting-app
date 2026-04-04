@@ -1,4 +1,5 @@
 import React from 'react';
+import { CheckCircle2, Clock3, User } from 'lucide-react';
 
 interface ParticipantsProps {
   votes?: Array<{
@@ -28,11 +29,11 @@ function ParticipantRow({
 	if (!revealed) {
 	  return hasVoted ? (
       <span className="text-[#00aaa6] text-sm font-semibold flex items-center gap-1">
-        ✅ Voted
+        <CheckCircle2 size={14} aria-hidden="true" /> Voted
       </span>
     ) : (
       <span className="text-amber-500 dark:text-amber-400 text-sm font-semibold flex items-center gap-1">
-        ⏳ Thinking…
+        <Clock3 size={14} aria-hidden="true" /> Thinking...
       </span>
     )
 	}
@@ -55,7 +56,7 @@ function ParticipantRow({
 	  ].join(' ')}
 	>
 	  <div className="flex items-center gap-2">
-		<span className="text-lg">👤</span>
+    <User size={16} aria-hidden="true" />
 		<span
 		  className={[
 			'font-medium text-sm',

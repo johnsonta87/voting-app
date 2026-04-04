@@ -14,7 +14,7 @@ function Header({
   onChangeName,
   theme,
   onToggleTheme,
-  title = 'OCC Planning Poker',
+  title = 'Team Planning Poker',
   changeLabel = 'change',
 }: Readonly<HeaderProps>) {
   return (
