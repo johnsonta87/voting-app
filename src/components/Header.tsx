@@ -1,3 +1,5 @@
+import { Moon, Sun } from 'lucide-react'
+
 type HeaderProps = {
   voterName: string
   onChangeName: () => void
@@ -27,22 +29,26 @@ function Header({
           <span>{title}</span>
         </span>
         <div className="flex items-center gap-2 text-sm">
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            className="text-xs cursor-pointer font-semibold text-black dark:text-white px-2 py-1"
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-          >
-            {theme === 'dark' ? 'Light' : 'Dark'}
-          </button>
-          |<span className="text-black dark:text-white">Voting as</span>
+          <span className="text-black dark:text-white">Voting as</span>
           <span className="font-semibold text-[#00aaa6]">{voterName}</span>
           <button
             onClick={onChangeName}
             className="text-xs text-black dark:text-white underline ml-1"
           >
             {changeLabel}
+          </button>
+          |<button
+            type="button"
+            onClick={onToggleTheme}
+            className="text-xs cursor-pointer font-semibold text-black dark:text-white px-2 py-1"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+          >
+            {theme === 'dark' ? (
+              <Sun size={16} aria-hidden="true" />
+            ) : (
+              <Moon size={16} aria-hidden="true" />
+            )}
           </button>
         </div>
       </div>
