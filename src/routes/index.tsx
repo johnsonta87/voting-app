@@ -8,8 +8,10 @@ import Header from '~/components/Header.tsx'
 import Participants from '~/components/Participants.tsx'
 import AverageEstimate from '~/components/AverageEstimate.tsx'
 import VotingCards from '~/components/VotingCards.tsx'
-import StatusBanner from '~/components/StatusBanner.tsx'
+import PokerTable from '~/components/PokerTable.tsx'
+import ConfirmDialog from '~/components/ConfirmDialog.tsx'
 import { useRoom } from '~/hooks/useRoom.ts'
+import { useTheme } from '~/hooks/useTheme.ts'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -19,16 +21,15 @@ const STORY_POINTS = ['1', '2', '3', '5', '8', '13', '21', '?', '☕']
 
 function Home() {
   const { isClient, voterName, setVoterName, roomId, setRoomId } = useRoom();
+  const { theme, toggleTheme } = useTheme()
   const [nameInput, setNameInput] = useState('')
   const [_, setShowNewRound] = useState(false)
-  const [showClearConfirm, setShowClearConfirm] = useState(false)
-  const [showClearVotesConfirm, setShowClearVotesConfirm] = useState(false)
+  const [showClearVotesDialog, setShowClearVotesDialog] = useState(false)
 
   const getOrCreateRoom = useMutation(api.voting.getOrCreateRoom)
   const submitVoteMutation = useMutation(api.voting.submitVote)
   const revealVotesMutation = useMutation(api.voting.revealVotes)
   const resetRoomMutation = useMutation(api.voting.resetRoom)
-  const clearRoomMutation = useMutation(api.voting.clearRoom)
 
   // Real-time room data — "skip" until we have both roomId and voterName
   const roomData = useQuery(
@@ -85,25 +86,10 @@ function Home() {
     setShowNewRound(false)
   }
 
-  const handleClearRoom = () => {
-    if (!roomId) return
-    // Prevent clearing if already in initial state (no votes)
-    const isInitialState =
-      (roomData?.votes.filter((v) => v.hasVoted).length ?? 0) === 0
-    if (isInitialState) {
-      setShowClearConfirm(false)
-      setShowNewRound(false)
-      return
-    }
-    void clearRoomMutation({ roomId })
-    setShowClearConfirm(false)
-    setShowNewRound(false)
-  }
-
   const handleClearVotes = () => {
     if (!roomId || !roomData) return
     void resetRoomMutation({ roomId })
-    setShowClearVotesConfirm(false)
+    setShowClearVotesDialog(false)
     setShowNewRound(false)
   }
 
@@ -145,17 +131,28 @@ function Home() {
         nameInput={nameInput}
         onNameInputChange={setNameInput}
         onJoin={handleJoin}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
     )
   }
 
   return (
     <div className="min-h-screen">
-      <Header voterName={voterName} onChangeName={handleChangeName} />
+      <Header
+        voterName={voterName}
+        onChangeName={handleChangeName}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
 
-      <main className="max-w-3xl mx-auto px-5 py-6 flex flex-col gap-5">
-        <StatusBanner statusText={statusText} />
-
+      <main className="max-w-7xl mx-auto px-5 py-6 flex flex-col gap-5">
+        <h1 className="text-foreground text-3xl font-bold tracking-tighter md:text-5xl mb-2">
+          OCC Planning Poker
+        </h1>
+        <p className="text-muted-foreground w-full text-sm font-normal md:px-0">
+          Pick a card to estimate the story, wait for everyone to vote, then reveal and discuss the results to align on a final estimate.
+        </p>
         <VotingCards
           storyPoints={STORY_POINTS}
           mySelectedValue={mySelectedValue}
@@ -164,6 +161,8 @@ function Home() {
         />
 
         <AverageEstimate average={roomData?.revealed ? average : null} />
+
+        <PokerTable statusText={statusText} />
 
         <Participants
           votes={roomData?.votes}
@@ -188,7 +187,7 @@ function Home() {
             <div className="flex gap-2">
               <button
                 onClick={handleNewRound}
-                className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-xl transition-colors flex-1"
+                className="bg-black dark:bg-white cursor-pointer text-white dark:text-black font-semibold px-5 py-3 rounded-xl transition-colors flex-1"
               >
                 Start New Round
               </button>
@@ -198,64 +197,28 @@ function Home() {
           {/* ── Clear/Reset actions ── */}
           {!roomData?.revealed &&
             roomData &&
-            !showClearVotesConfirm &&
-            !showClearConfirm && (
+                !showClearVotesDialog && (
               <div className="flex gap-2">
                 <button
-                  onClick={() => setShowClearVotesConfirm(true)}
+                      onClick={() => setShowClearVotesDialog(true)}
                   disabled={votedCount === 0}
-                  className="w-full border-2 cursor-pointer border-amber-200 dark:border-amber-900 bg-orange-900 hover:bg-orange-400 dark:hover:bg-amber-900/90 disabled:opacity-40 disabled:cursor-not-allowed font-medium py-2.5 rounded-xl transition-colors text-sm"
+                  className="w-full cursor-pointer bg-black dark:bg-white text-white dark:text-black disabled:opacity-40 disabled:cursor-not-allowed font-semibold py-2.5 rounded-xl transition-colors text-sm"
                 >
                   🧹 Clear
                 </button>
               </div>
             )}
-
-          {/* Hide confirm dialogs if votes are revealed */}
-          {!roomData?.revealed && showClearVotesConfirm && (
-            <div className="border-2 border-amber-200 dark:border-amber-800 rounded-xl p-4 flex flex-col gap-3 bg-amber-50 dark:bg-amber-900">
-              <p className="text-sm font-medium text-center">
-                Clear all votes for everyone?
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleClearVotes}
-                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
-                >
-                  Yes, clear votes
-                </button>
-                <button
-                  onClick={() => setShowClearVotesConfirm(false)}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-2.5 rounded-lg transition-colors text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-
-          {!roomData?.revealed && showClearConfirm && (
-            <div className="border-2 border-red-200 dark:border-red-800 rounded-xl p-4 flex flex-col gap-3 bg-red-50 dark:bg-red-900/10">
-              <p className="text-sm text-red-700 dark:text-red-300 font-medium text-center">
-                Remove all votes for everyone?
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleClearRoom}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
-                >
-                  Yes, clear it
-                </button>
-                <button
-                  onClick={() => setShowClearConfirm(false)}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-2.5 rounded-lg transition-colors text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
         </div>
+
+            <ConfirmDialog
+              cancelLabel="Keep votes"
+              confirmLabel="Yes, clear votes"
+              description="This removes every current vote in the room and starts the round over for everyone."
+              onCancel={() => setShowClearVotesDialog(false)}
+              onConfirm={handleClearVotes}
+              open={!roomData?.revealed && showClearVotesDialog}
+              title="Clear all votes?"
+            />
       </main>
     </div>
   )

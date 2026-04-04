@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   html,
   body {
@@ -7,21 +9,22 @@
   }
 
   body {
+    @apply bg-white dark:bg-gray-950;
     min-height: 100vh;
     position: relative;
-    background-color: #0b1020;
-    background-image: url('../../public/assets/images/poker-joker-cards-bg.png');
-    background-repeat: repeat;
-    background-position: top left;
   }
 
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(238, 238, 228, 0.95);
+    background: #fff;
     pointer-events: none;
     z-index: 0;
+  }
+
+  .dark body::before {
+    background: rgb(3 7 18);
   }
 
   body > * {

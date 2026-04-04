@@ -8,11 +8,11 @@ const AverageEstimate: React.FC<AverageEstimateProps> = ({ average }) => {
   if (!average) return null;
 
   return (
-    <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-400 p-5 text-center">
+    <div className="bg-white dark:bg-black text-center border border-gray-200 dark:border-gray-400 rounded-lg p-6">
       <p className="text-xs font-medium uppercase tracking-wider mb-2">
         Average estimate
       </p>
-      <p className="text-6xl font-extrabold text-blue-600 dark:text-blue-400">
+      <p className="text-6xl font-extrabold text-black dark:text-white">
         {average}
       </p>
       <p className="text-xs mt-1">story points</p>

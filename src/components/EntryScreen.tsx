@@ -1,21 +1,37 @@
-type EntryScreenProps = {
+type EntryScreenProps = Readonly<{
   nameInput: string
   onNameInputChange: (value: string) => void
   onJoin: () => void
+  theme: 'light' | 'dark'
+  onToggleTheme: () => void
   isJoinDisabled?: boolean
-}
+}>
 
-function EntryScreen({
-  nameInput,
-  onNameInputChange,
-  onJoin,
-  isJoinDisabled = !nameInput.trim(),
-}: EntryScreenProps) {
+function EntryScreen(props: EntryScreenProps) {
+  const {
+    nameInput,
+    onNameInputChange,
+    onJoin,
+    theme,
+    onToggleTheme,
+    isJoinDisabled = !nameInput.trim(),
+  } = props
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-xl p-8 w-full max-w-sm dark:border-2">
+      <div className="bg-white dark:bg-black rounded-2xl shadow-xl p-8 w-full max-w-sm dark:border-2">
         <div className="text-center mb-6">
+          <div className="flex justify-end mb-2">
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className="text-xs cursor-pointer text-black dark:text-white border border-gray-300 dark:border-white rounded-md px-2 py-1"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            >
+              {theme === 'dark' ? 'Light' : 'Dark'}
+            </button>
+          </div>
           <div className="text-5xl mb-3">
             <img src={'/assets/images/logo.png'} alt="Logo" className="w-16 mx-auto" />
           </div>
@@ -33,7 +49,7 @@ function EntryScreen({
             onChange={(e) => onNameInputChange(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && onJoin()}
             placeholder="Your name"
-            className="border-2 text-center border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-base focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
+            className="border-2 text-center border-gray-200 dark:border-white rounded-xl px-4 py-3 text-base focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
             autoFocus
           />
           <button

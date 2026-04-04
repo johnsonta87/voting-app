@@ -27,18 +27,18 @@ function ParticipantRow({
   const voteDisplay = (() => {
 	if (!revealed) {
 	  return hasVoted ? (
-		<span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center gap-1">
-		  ✅ Voted
-		</span>
-	  ) : (
-		<span className="text-amber-500 dark:text-amber-400 text-sm font-medium flex items-center gap-1">
-		  ⏳ Thinking…
-		</span>
-	  );
+      <span className="text-[#00aaa6] text-sm font-semibold flex items-center gap-1">
+        ✅ Voted
+      </span>
+    ) : (
+      <span className="text-amber-500 dark:text-amber-400 text-sm font-semibold flex items-center gap-1">
+        ⏳ Thinking…
+      </span>
+    )
 	}
 	if (value) {
 	  return (
-		<span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-600 text-white font-bold text-base shadow-sm">
+		<span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-base">
 		  {value}
 		</span>
 	  );
@@ -48,9 +48,9 @@ function ParticipantRow({
   return (
 	<div
 	  className={[
-		'flex items-center justify-between px-4 py-3 rounded-xl',
+		'flex items-center justify-between px-4 py-3 rounded-md',
 		isMe
-		  ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800'
+		  ? 'bg-gray-200 dark:bg-gray-400/20 border border-black dark:border-white'
 		  : 'bg-gray-50 dark:bg-gray-700/40',
 	  ].join(' ')}
 	>
@@ -60,7 +60,7 @@ function ParticipantRow({
 		  className={[
 			'font-medium text-sm',
 			isMe
-			  ? 'text-blue-700 dark:text-blue-300'
+			  ? 'text-black dark:text-white'
 			  : 'text-gray-700 dark:text-gray-300',
 		  ].join(' ')}
 		>
@@ -79,8 +79,8 @@ const Participants: React.FC<ParticipantsProps> = ({
   revealed,
   iAmInList,
 }) => (
-  <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-400 p-5">
-    <p className="text-xs font-medium uppercase tracking-wider mb-4">
+  <div className="bg-white dark:bg-black">
+    <p className="text-xs text-black dark:text-white font-medium uppercase tracking-wider mb-4">
       Participants
     </p>
     <div className="flex flex-col gap-2">

@@ -1,11 +1,11 @@
 type RoomDate =
   | {
       revealed: boolean
-      votes: {
+      votes: Array<{
         voterName: string
         value: string | null | undefined
         hasVoted: boolean
-      }[]
+      }>
     }
   | null
   | undefined

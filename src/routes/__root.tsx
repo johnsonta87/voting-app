@@ -7,6 +7,7 @@ import {
 import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
+import { themeScript } from '~/hooks/useTheme.ts'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -63,6 +64,7 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <HeadContent />
         <title>OCC Planning Poker</title>
       </head>

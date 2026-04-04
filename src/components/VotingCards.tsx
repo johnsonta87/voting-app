@@ -15,7 +15,7 @@ const VotingCards: React.FC<VotingCardsProps> = ({
 }) => {
   if (revealed) return null
   return (
-    <div className="bg-white dark:bg-[#00203e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-400 p-5">
+    <div className="bg-white dark:bg-black">
       <p className="text-xs font-medium uppercase tracking-wider mb-4">
         Pick a card to vote
       </p>
@@ -31,8 +31,8 @@ const VotingCards: React.FC<VotingCardsProps> = ({
                 'border-2 transition-all duration-150 select-none',
                 'hover:-translate-y-1 hover:shadow-md active:scale-95',
                 selected
-                  ? 'border-blue-500 bg-blue-500 text-white shadow-lg -translate-y-1'
-                  : 'border-gray-200 dark:border-gray-400 text-gray-700 dark:text-gray-200 hover:border-blue-400',
+                  ? 'bg-[#00aaa6] text-white shadow-lg -translate-y-1'
+                  : 'border-gray-200 dark:border-gray-400 text-gray-700 dark:text-gray-200 hover:border-[#00aaa6]',
               ].join(' ')}
             >
               {point}
@@ -41,7 +41,7 @@ const VotingCards: React.FC<VotingCardsProps> = ({
         })}
       </div>
       {mySelectedValue && (
-        <p className="text-sm text-blue-600 dark:text-blue-400 mt-3 font-medium text-center">
+        <p className="text-sm text-[#00aaa6] dark:text-white mt-3 font-semibold text-center">
           You selected <strong>{mySelectedValue}</strong> · tap another card to
           change
         </p>
