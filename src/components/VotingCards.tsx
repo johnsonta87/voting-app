@@ -41,7 +41,7 @@ const VotingCards: React.FC<VotingCardsProps> = ({
         })}
       </div>
       {mySelectedValue && (
-        <p className="text-sm text-[#00aaa6] dark:text-white mt-3 font-semibold text-center">
+        <p className="text-sm text-[#00aaa6] dark:text-white mt-6 font-semibold text-center">
           You selected <strong>{mySelectedValue}</strong> · tap another card to
           change
         </p>
