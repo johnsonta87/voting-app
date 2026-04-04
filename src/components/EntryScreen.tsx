@@ -1,3 +1,5 @@
+import { Moon, Sun } from 'lucide-react'
+
 type EntryScreenProps = Readonly<{
   nameInput: string
   onNameInputChange: (value: string) => void
@@ -25,11 +27,11 @@ function EntryScreen(props: EntryScreenProps) {
             <button
               type="button"
               onClick={onToggleTheme}
-              className="text-xs cursor-pointer text-black dark:text-white border border-gray-300 dark:border-white rounded-md px-2 py-1"
+              className="text-xs cursor-pointer text-black dark:text-white"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
               title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
             >
-              {theme === 'dark' ? 'Light' : 'Dark'}
+              {theme === 'dark' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
             </button>
           </div>
           <div className="text-5xl mb-3">
