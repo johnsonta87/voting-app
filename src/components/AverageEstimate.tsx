@@ -12,9 +12,7 @@ const AverageEstimate: React.FC<AverageEstimateProps> = ({ average }) => {
       <p className="text-xs font-medium uppercase tracking-wider mb-2">
         Average estimate
       </p>
-      <p className="text-6xl font-extrabold text-black dark:text-white">
-        {average}
-      </p>
+      <p className="text-6xl font-extrabold text-[#00aaa6]">{average}</p>
       <p className="text-xs mt-1">story points</p>
     </div>
   )

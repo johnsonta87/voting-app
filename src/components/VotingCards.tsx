@@ -16,10 +16,7 @@ const VotingCards: React.FC<VotingCardsProps> = ({
   if (revealed) return null
   return (
     <div className="bg-white dark:bg-black">
-      <p className="text-xs font-medium uppercase tracking-wider mb-4">
-        Pick a card to vote
-      </p>
-      <div className="grid grid-cols-9 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
         {storyPoints.map((point) => {
           const selected = mySelectedValue === point
           return (

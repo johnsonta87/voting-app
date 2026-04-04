@@ -17,12 +17,12 @@ function Header({
 }: Readonly<HeaderProps>) {
   return (
     <header className="bg-white dark:bg-black border-b border-gray-100 dark:border-gray-400 shadow-sm">
-      <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between">
-        <span className="font-bold text-black dark:text-white text-lg flex items-center gap-2">
+      <div className="w-full md:max-w-7xl mx-auto px-5 py-3 flex flex-col md:flex-row md:items-center md:justify-between">
+        <span className="font-bold text-black dark:text-white text-lg flex items-center gap-2 w-full mb-4 md:mb-0 md:w-auto">
           <img
             src={'/assets/images/logo.png'}
             alt="Logo"
-            className="w-8 mx-auto"
+            className="w-5 md:w-8 md:mx-auto"
           />{' '}
           <span>{title}</span>
         </span>

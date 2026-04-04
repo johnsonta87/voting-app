@@ -53,13 +53,13 @@ function EntryScreen(props: EntryScreenProps) {
             onChange={(e) => onNameInputChange(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && onJoin()}
             placeholder="Your name"
-            className="border-2 text-center border-gray-200 dark:border-white rounded-xl px-4 py-3 text-base focus:outline-none focus:border-[#00aaa6] dark:bg-white dark:text-black transition-colors"
+            className="border-2 text-center border-gray-200 dark:border-white rounded-md px-4 py-3 text-base focus:outline-none focus:border-[#00aaa6] dark:bg-white dark:text-black transition-colors"
             autoFocus
           />
           <button
             onClick={onJoin}
             disabled={isJoinDisabled}
-            className="bg-[#00aaa6] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
+            className="bg-[#00aaa6] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-md transition-colors"
           >
             Join Session
           </button>

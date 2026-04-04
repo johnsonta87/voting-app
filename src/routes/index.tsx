@@ -179,7 +179,7 @@ function Home() {
               <button
                 onClick={handleReveal}
                 disabled={votedCount === 0}
-                className="w-[250px] cursor-pointer bg-[#00aaa6] hover:bg-[#017f7c] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-base"
+                className="w-full max-w-[250px] cursor-pointer bg-[#00aaa6] hover:bg-[#017f7c] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-md transition-colors text-base"
               >
                 Reveal Votes
               </button>
@@ -188,7 +188,7 @@ function Home() {
                 <button
                   onClick={() => setShowClearVotesDialog(true)}
                   disabled={votedCount === 0}
-                  className="w-[250px] cursor-pointer bg-black dark:bg-white disabled:opacity-40 disabled:cursor-not-allowed text-white dark:text-black font-semibold py-3 rounded-xl transition-colors text-base"
+                  className="w-full max-w-[250px] cursor-pointer bg-black dark:bg-white disabled:opacity-40 disabled:cursor-not-allowed text-white dark:text-black font-semibold py-3 rounded-md transition-colors text-base"
                 >
                   Clear
                 </button>
@@ -197,10 +197,10 @@ function Home() {
           )}
 
           {roomData?.revealed && (
-            <div className="flex gap-2">
+            <div className="flex justify-center gap-2">
               <button
                 onClick={handleNewRound}
-                className="bg-black dark:bg-white cursor-pointer text-white dark:text-black font-semibold px-5 py-3 rounded-xl transition-colors flex-1"
+                className="w-full max-w-[250px] bg-[#00aaa6] cursor-pointer text-white font-semibold px-5 py-3 rounded-md transition-colors flex-1"
               >
                 Start New Round
               </button>
