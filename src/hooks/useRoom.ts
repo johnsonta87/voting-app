@@ -4,6 +4,7 @@ import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
 
 export function useRoom() {
+  // for hydration for client side subscription
   const [isClient, setIsClient] = useState(false)
   const [voterName, setVoterName] = useState('')
   const [roomId, setRoomId] = useState<Id<'rooms'> | null>(null)

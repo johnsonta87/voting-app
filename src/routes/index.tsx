@@ -8,7 +8,7 @@ import Header from '~/components/Header.tsx'
 import Participants from '~/components/Participants.tsx'
 import AverageEstimate from '~/components/AverageEstimate.tsx'
 import VotingCards from '~/components/VotingCards.tsx'
-import PokerTable from '~/components/PokerTable.tsx'
+import Status from '~/components/Status.tsx'
 import ConfirmDialog from '~/components/ConfirmDialog.tsx'
 import { useRoom } from '~/hooks/useRoom.ts'
 import { useTheme } from '~/hooks/useTheme.ts'
@@ -95,24 +95,7 @@ function Home() {
   const mySelectedValue = myVote?.value ?? null
   const votedCount = roomData?.votes.filter((v) => v.hasVoted).length ?? 0
 
-  const numericVotes = roomData?.revealed
-    ? roomData.votes
-        .filter((v) => v.value && !Number.isNaN(Number(v.value)))
-        .map((v) => Number(v.value))
-    : []
-  const average =
-    numericVotes.length > 0
-      ? (numericVotes.reduce((a, b) => a + b, 0) / numericVotes.length).toFixed(1)
-      : null
-
   const iAmInList = roomData?.votes.some((v) => v.voterName === voterName) ?? false
-
-  const statusText = (() => {
-    if (!roomData) return '…'
-    if (roomData.revealed) return 'Estimates revealed'
-    if (votedCount === 0) return 'Waiting for estimates…'
-    return `${votedCount} voted · hidden until revealed`
-  })()
 
   if (!isClient) {
     return (
@@ -158,9 +141,9 @@ function Home() {
           revealed={roomData?.revealed}
         />
 
-        <AverageEstimate average={roomData?.revealed ? average : null} />
+        <AverageEstimate votes={roomData?.votes} revealed={roomData?.revealed} />
 
-        <PokerTable statusText={statusText} />
+        <Status votes={roomData?.votes} revealed={roomData?.revealed} />
 
         <Participants
           votes={roomData?.votes}
