@@ -9,7 +9,7 @@ function Footer() {
         <p>
           &copy; {year}{' '}
           <a
-            href="https://github.com"
+            href="https://github.com/johnsonta87"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline"
