@@ -42,7 +42,7 @@ export default function ConfirmDialog({
     }
   }, [open, onCancel])
 
-  if (!open || typeof document === 'undefined') return null
+  if (!open) return null
 
   const confirmButtonClassName =
     tone === 'danger'
