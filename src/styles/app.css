@@ -6,6 +6,7 @@
   html,
   body {
     @apply text-gray-900 dark:text-gray-200;
+    font-family: 'DM Sans', sans-serif;
   }
 
   body {

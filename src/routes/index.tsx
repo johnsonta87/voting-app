@@ -144,7 +144,7 @@ function Home() {
       />
 
       <main className="max-w-7xl mx-auto px-5 py-6 flex flex-col gap-5">
-        <h1 className="text-[#00aaa6] text-3xl font-bold tracking-tighter md:text-5xl mb-2">
+        <h1 className="text-[#00aaa6] text-3xl font-bold md:text-5xl mb-2">
           Team Planning Poker
         </h1>
         <p className="text-muted-foreground w-full text-sm font-normal md:px-0">
@@ -185,7 +185,7 @@ function Home() {
                 <button
                   onClick={() => setShowClearVotesDialog(true)}
                   disabled={votedCount === 0}
-                  className="w-full sm:max-w-62.5 border border-black dark:border-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed font-semibold py-3 rounded-md transition-colors text-base"
+                  className="w-full sm:max-w-62.5 hover:bg-gray-200 dark:hover:bg-transparent border border-gray-200 dark:border-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed font-semibold py-3 rounded-md transition-colors text-base"
                 >
                   Clear
                 </button>
