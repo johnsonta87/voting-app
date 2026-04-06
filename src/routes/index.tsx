@@ -12,6 +12,7 @@ import PokerTable from '~/components/PokerTable.tsx'
 import ConfirmDialog from '~/components/ConfirmDialog.tsx'
 import { useRoom } from '~/hooks/useRoom.ts'
 import { useTheme } from '~/hooks/useTheme.ts'
+import Footer from '~/components/Footer.tsx'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -218,6 +219,8 @@ function Home() {
           title="Clear all votes?"
         />
       </main>
+
+      <Footer />
     </div>
   )
 }

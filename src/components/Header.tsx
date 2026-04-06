@@ -31,12 +31,12 @@ function Header({
         <div className="flex items-center gap-2 text-sm">
           <span className="text-black dark:text-white">Voting as</span>
           <span className="font-semibold text-[#00aaa6]">{voterName}</span>
-          <button
-            onClick={onChangeName}
-            className="text-xs text-black dark:text-white underline ml-1"
-          >
-            {changeLabel}
-          </button>
+          {/*<button*/}
+          {/*  onClick={onChangeName}*/}
+          {/*  className="text-xs text-black dark:text-white underline ml-1"*/}
+          {/*>*/}
+          {/*  {changeLabel}*/}
+          {/*</button>*/}
           |<button
             type="button"
             onClick={onToggleTheme}
