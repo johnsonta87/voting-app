@@ -9,6 +9,11 @@
     font-family: 'DM Sans', sans-serif;
   }
 
+  button {
+    @apply outline-none outline-none;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+
   body {
     @apply bg-white dark:bg-gray-950;
     min-height: 100vh;

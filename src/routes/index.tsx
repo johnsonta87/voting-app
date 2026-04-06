@@ -185,7 +185,7 @@ function Home() {
                 <button
                   onClick={() => setShowClearVotesDialog(true)}
                   disabled={votedCount === 0}
-                  className="w-full sm:max-w-62.5 hover:bg-gray-200 dark:hover:bg-transparent border border-gray-200 dark:border-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed font-semibold py-3 rounded-md transition-colors text-base"
+                  className="w-full sm:max-w-62.5 bg-gray-100 text-gray-700 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus-visible:ring-gray-500 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed font-semibold py-3 rounded-md transition-colors text-base"
                 >
                   Clear
                 </button>
