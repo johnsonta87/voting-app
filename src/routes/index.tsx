@@ -32,16 +32,12 @@ function Home() {
   const revealVotesMutation = useMutation(api.voting.revealVotes)
   const resetRoomMutation = useMutation(api.voting.resetRoom)
 
-  // Real-time room data — "skip" until we have both roomId and voterName
+  // realtime - "skip" until we have both roomId and voterName
   const roomData = useQuery(
     api.voting.getVotes,
     roomId && voterName ? { roomId, voterName } : 'skip',
   )
 
-  // Remove destructure from useVote, use only the derived state below
-  // const { myVote, mySelectedValue, votedCount } = useVote(roomData, voterName)
-
-  // Hydrate state from localStorage after first render
   useEffect(() => {
     const savedName = localStorage.getItem('voterName') ?? ''
     setVoterName(savedName)
@@ -49,7 +45,7 @@ function Home() {
     const savedRoomId = localStorage.getItem('roomId')
     if (savedRoomId) setRoomId(savedRoomId as Id<'rooms'>)
 
-    // Always ensure a room exists
+    // always ensure a room exists
     getOrCreateRoom({}).then((id) => {
       setRoomId(id)
       localStorage.setItem('roomId', id)
@@ -101,7 +97,7 @@ function Home() {
 
   const numericVotes = roomData?.revealed
     ? roomData.votes
-        .filter((v) => v.value !== null && v.value !== undefined && !Number.isNaN(Number(v.value)))
+        .filter((v) => v.value && !Number.isNaN(Number(v.value)))
         .map((v) => Number(v.value))
     : []
   const average =

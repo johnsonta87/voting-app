@@ -39,10 +39,10 @@ function ParticipantRow({
 	}
 	if (value) {
 	  return (
-		<span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold text-base">
-		  {value}
-		</span>
-	  );
+      <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[#00aaa6] text-white font-bold text-base">
+        {value}
+      </span>
+    )
 	}
 	return <span className="text-xs">—</span>;
   })();

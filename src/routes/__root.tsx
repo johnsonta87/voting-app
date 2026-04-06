@@ -7,7 +7,7 @@ import {
 import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
-import { themeScript } from '~/hooks/useTheme.ts'
+import { getThemeScript } from '~/lib/theme.ts'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -61,6 +61,8 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
+  const themeScript = getThemeScript()
+
   return (
     <html lang="en">
       <head>

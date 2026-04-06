@@ -23,7 +23,7 @@ export default function ConfirmDialog({
   tone = 'default',
 }: ConfirmDialogProps) {
   useEffect(() => {
-    if (!open || typeof document === 'undefined') return
+    if (!open) return
 
     const originalOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'

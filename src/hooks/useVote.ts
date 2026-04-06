@@ -3,7 +3,7 @@ type RoomDate =
       revealed: boolean
       votes: Array<{
         voterName: string
-        value: string | null | undefined
+        value?: string | null
         hasVoted: boolean
       }>
     }
