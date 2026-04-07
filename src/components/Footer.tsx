@@ -1,5 +1,3 @@
-import { Github } from 'lucide-react'
-
 function Footer() {
   const year = new Date().getFullYear()
 
