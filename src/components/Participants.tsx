@@ -84,7 +84,7 @@ const Participants: React.FC<ParticipantsProps> = ({
     <p className="text-xs text-black dark:text-white font-medium uppercase tracking-wider mb-4">
       Participants
     </p>
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {/* Current user if not yet in the list */}
       {!iAmInList && (
         <ParticipantRow
