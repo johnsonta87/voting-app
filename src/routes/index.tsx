@@ -118,7 +118,7 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header
         voterName={voterName}
         onChangeName={handleChangeName}
@@ -126,7 +126,7 @@ function Home() {
         onToggleTheme={toggleTheme}
       />
 
-      <main className="max-w-7xl mx-auto px-5 py-6 flex flex-col gap-5">
+      <main className="max-w-7xl mx-auto px-5 py-6 flex flex-col gap-5 flex-1">
         <h1 className="text-[#00aaa6] text-3xl font-bold md:text-5xl mb-2">
           Team Planning Poker
         </h1>
