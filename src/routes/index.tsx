@@ -10,7 +10,6 @@ import AverageEstimate from '~/components/AverageEstimate.tsx'
 import VotingCards from '~/components/VotingCards.tsx'
 import Status from '~/components/Status.tsx'
 import ConfirmDialog from '~/components/ConfirmDialog.tsx'
-import CountdownOverlay from '~/components/CountdownOverlay'
 import { useRoom } from '~/hooks/useRoom.ts'
 import { useTheme } from '~/hooks/useTheme.ts'
 import Footer from '~/components/Footer.tsx'
@@ -27,7 +26,6 @@ function Home() {
   const [nameInput, setNameInput] = useState('')
   const [_, setShowNewRound] = useState(false)
   const [showClearVotesDialog, setShowClearVotesDialog] = useState(false)
-  const [showCountdown, setShowCountdown] = useState(false);
 
   const getOrCreateRoom = useMutation(api.voting.getOrCreateRoom)
   const submitVoteMutation = useMutation(api.voting.submitVote)
@@ -76,16 +74,12 @@ function Home() {
 
   const handleReveal = () => {
     if (!roomId) return;
-    setShowCountdown(true);
+    // Instead of showing countdown, immediately reveal votes
+    void revealVotesMutation({ roomId });
   };
 
   // When countdown finishes, actually reveal votes
-  const handleCountdownComplete = () => {
-    setShowCountdown(false);
-    if (roomId) {
-      void revealVotesMutation({ roomId });
-    }
-  };
+  // handleCountdownComplete removed as CountdownOverlay is not used
 
   const handleNewRound = () => {
     if (!roomId) return
@@ -129,9 +123,7 @@ function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {showCountdown && (
-        <CountdownOverlay seconds={3} onComplete={handleCountdownComplete} />
-      )}
+      {/* CountdownOverlay removed as requested */}
       <Header
         voterName={voterName}
         onChangeName={handleChangeName}
@@ -167,7 +159,7 @@ function Home() {
 
         {/* ── Action bar ── */}
         <div className="flex flex-col gap-3">
-          {!roomData?.revealed && !showCountdown && (
+          {!roomData?.revealed && (
             <div className="flex flex-wrap items-center justify-center gap-2">
               <button
                 onClick={handleReveal}
